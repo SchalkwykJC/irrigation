@@ -2,15 +2,12 @@ var http = require('http').createServer(handler);
 var fs = require('fs');
 var io = require('socket.io')(http);
 var Gpio = require('onoff').Gpio;
-var LED = new Gpio(4,'out');
+var LineOne = new Gpio(4,'out');
 
 var lightvalue = 0;
 
 http.listen(8080);
-LED.writeSync(1);
-
-console.log("LED:" + LED.readSync() + " LightValue:" + lightvalue);
-
+LineOne.writeSync(1);
 
 function handler(req, res){
 	fs.readFile(__dirname + '/public/index.html', function(err, data){
@@ -28,25 +25,23 @@ io.sockets.on('connection', function(socket) {
 	
 
 	socket.on('light', function(data) {
-	
-		console.log("Data:" + data);
 
-		lightvalue = data;
 
-		if (lightvalue != LED.readSync()){
+		console.log("State" + data.state);
+		console.log("Line" + data.line);
 
-			console.log("Hier");
+		lineOneValue = data.state;
 
-			console.log("Webserver " + lightvalue);
-			console.log("LED " + LED.readSync());
-			LED.writeSync(lightvalue);
+		if (lineOneValue != LineOne.readSync()){
+
+			LineOne.writeSync(lineOneValue);
 		}
 		
 	});
 });
 
 process.on('SIGINT', function() {
-	LED.writeSync(0);
-	LED.unexport();
+	LineOne.writeSync(0);
+	LineOne.unexport();
 	process.exit();
 });

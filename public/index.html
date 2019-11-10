@@ -1,39 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Irrigation Computer</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+
+
+
+
+             
 </head>
 <body>
 	<h1>Irrigation</h1>
 
-	<input type="checkbox" id="light"/>
+	<div>Registration closes in <span id="time">05:00</span> minutes!</div>
+
+	
+
+	<form name="irrigationLines">
+		<input type="radio" id="none" name="irrigationLine" value="none" onClick="runLine(this.value); checked"/><span>None</span></br>
+
+		<h3>Front Yard</h3>
+		<input type="radio" name="irrigationLine" value="frontOne" onClick="runLine(this.value);"/><span>Line 1</span></br>
+		<input type="radio" name="irrigationLine" value="frontTwo" onClick="runLine(this.value);"/><span>Line 2</span>
+
+		<h3>Back Yard</h3>
+		<input type="radio" name="irrigationLine" value="backOne" onClick="runLine(this.value);"/><span>Line 1</span></br>
+		<input type="radio" name="irrigationLine" value="backTwo" onClick="runLine(this.value);"/><span>Line 2</span></br>
+		<input type="radio" name="irrigationLine" value="backThree" onClick="runLine(this.value);"/><span>Line 3</span></br>
+		<input type="radio" name="irrigationLine" value="backFour" onClick="runLine(this.value);"/><span>Line 4</span></br>
+		<input type="radio" name="irrigationLine" value="backFive" onClick="runLine(this.value);"/><span>Line 5</span>
+	</form>		
 
 	<script>
+
+		var fiveMinutes = 60 * 0.1,
+        display = document.querySelector('#time');
+
 		var socket = io();
-		//window.addEventListener("load", function(){
-			var lightbox = document.getElementById("light");
-		
-			console.log("Faark " + lightbox.checked);
 
-			lightbox.addEventListener("change", function(){
-			
-				console.log("Inside " + lightbox.checked);
+		defaultButton = document.getElementById("none");
+		defaultButton.checked = true;
 
-
-				if (lightbox.checked == true){
-					console.log("It is on");
-					socket.emit("light", 0);
+		function runLine(irrigationLine){
+			if (irrigationLine == "none"){
+					
+					socket.emit("light", {"state": 1, "line": irrigationLine});
+					
 				}else {
-					console.log("It is off");
-					socket.emit("light", 1);
+					startTimer(fiveMinutes, display);
+					socket.emit("light", {"state": 0, "line": irrigationLine});
 				}
-			
-				
-				//socket.emit("light", Number(this.checked));	
-			});
+		};
 
-		//});
+		function startTimer(duration, display) {
+    		var timer = duration, minutes, seconds;
+    		var myInterval = setInterval(function () {
+			minutes = parseInt(timer / 60, 10)
+			seconds = parseInt(timer % 60, 10);
+
+			minutes = minutes < 10 ? "0" + minutes : minutes;
+			seconds = seconds < 10 ? "0" + seconds : seconds;
+
+			display.textContent = minutes + ":" + seconds;
+
+			if (--timer < 0) {
+				clearInterval(myInterval);
+			}
+		}, 1000);
+
+}
 		
+	
 	</script>
 
 </body>

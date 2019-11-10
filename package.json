@@ -1,0 +1,22 @@
+{
+  "name": "irrigation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SchalkwykJC/irrigation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SchalkwykJC/irrigation/issues"
+  },
+  "homepage": "https://github.com/SchalkwykJC/irrigation#readme",
+  "dependencies": {
+    "easytimer.js": "^4.0.2"
+  }
+}
